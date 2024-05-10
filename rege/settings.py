@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
+    
 ]
 
 ROOT_URLCONF = 'rege.urls'
@@ -152,3 +153,4 @@ MESSAGE_TAGS = {
 }
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

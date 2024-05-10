@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.http import HttpResponse
@@ -185,15 +185,37 @@ def search_courses(request):
 @login_required
 def register_course(request, course_code):
     if request.method == "POST":
-        course = Courses.objects.get(code=course_code)
-        student = Student.objects.get(user=request.user)
-        if not studentsReg.objects.filter(student_id=student, course_id=course).exists():
-            registration = studentsReg(student_id=student, course_id=course)
-            registration.save()
-            # return redirect('course_registration_success')
-        # else:
-        #     return render(request, 'courses/registration_error.html', {'error': 'You are already registered for this course.'})
+        course = get_object_or_404(Courses, code=course_code)
+        student = get_object_or_404(Student, user=request.user)
+
+        if studentsReg.objects.filter(student_id=student, course_id=course).exists():
+            messages.error(request, "You are already registered for this course.")
+            return redirect('')
+
+        existing_registrations = studentsReg.objects.filter(student_id=student)
+        for registration in existing_registrations:
+            existing_course = registration.course_id
+            if existing_course.schedule_id:
+                if course.schedule_id and has_time_conflict(existing_course.schedule_id, course.schedule_id):
+                    messages.error(request, f"Schedule conflict with {existing_course.name}.")
+                    return redirect('')
+
+        registration = studentsReg(student_id=student, course_id=course)
+        registration.save()
+        messages.success(request, "You have successfully registered for the course.")
+   
     return redirect('')
+
+def has_time_conflict(schedule1, schedule2):
+    if schedule1.days != schedule2.days:
+        return False
+
+    if schedule1.start_time < schedule2.end_time and schedule2.start_time < schedule1.end_time:
+        return True
+
+    return False
+
+
 
 @login_required(login_url='/login'  )
 def mycourses(request):

@@ -29,3 +29,11 @@ function ValidateEmail(mail)
     return (false)
 }
 
+
+  setTimeout(() => {
+    const messages = document.querySelectorAll('.message');
+    messages.forEach(message => {
+        message.style.opacity = '0';
+        setTimeout(() => message.remove(), 500); // remove after transition
+    });
+}, 3000);
