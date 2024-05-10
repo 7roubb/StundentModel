@@ -1,0 +1,95 @@
+
+:root {
+    --primary-bg: transparent;
+    --secondary-bg: #ced1c7;
+    --accent-bg: #bcbbc2;
+
+    --primary-color: #807d7d;
+    --secondary-color: rgba(117, 117, 117, 0.7);
+    --accent-color: #a1a2aa;
+
+    --border-color: rgba(141, 139, 139, 0.3);
+    
+    --username-size: 32px;
+    --title-size: 28px;
+    --subtitle: 24px;
+}
+.profile-card {
+    margin-top: 5%;
+    width: 550px;
+    height: 670px;
+    background-color: white;
+    border-radius: 40px;
+    box-shadow: 1px 1px 2px 2px var(--accent-bg);
+    display: flex;
+    flex-direction: column;
+
+}
+.profile-header {
+    background-size: cover;
+    margin: 10px;
+    border-radius: 30px 30px 0 0;
+    position: relative;
+}
+    .main-profile {
+        margin-top: 8%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+       
+        
+    }
+    .profile-image {
+            width: 150px;
+            height: 150px;
+            background-size: cover;
+            border-radius: 50%;
+            border: 10px solid var(--primary-bg);
+        }
+ 
+        .profile-names {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: var(--primary-color);
+            background-color: var(--primary-bg);
+            padding: 10px 30px;
+            border-radius: 0 50px 50px 0;
+            transform: translateX(-10px);
+        } 
+.profile-body {
+    display: flex;
+    gap: 20px;
+    padding: 70px;
+}
+.bio {
+    height: 200px;
+        color: var(--primary-color);
+        background-color: var(--secondary-bg);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+    }   .bio-header {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--secondary-color);
+        }
+   .data {
+    height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--secondary-color);
+            padding: 30px;
+
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+        }
+        
+           .data h4{
+                font-size: 0.9em;
+           }

@@ -1,0 +1,68 @@
+
+{% load static %}
+<div class="navcontainer">   <nav>
+    <div class="navbar">
+        <button class="user" id="user">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="logo">
+            
+            <a href="{% url '' %}"><img src="../static/assets/logo.png" width="100px" alt="" class="logoimg"></a>
+        </div>        
+    </div>
+       
+    <div class="search_box">
+        
+        <form method="GET" action="{% url 'search_courses' %}">
+            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+            <input name="search" type="text" placeholder="Search courses...">
+        </form>
+        
+                    
+    </div>
+    <div class="new">
+        {% if student.avatar %}
+        <img  src="{{student.avatar.url}}" height="45px" width="45px" style="border-radius: 50%;" alt="" class="profile">
+        {% else %}
+        <img  src="{% static 'assets/defult.png'%}" height="45px" width="45px" style="border-radius: 50%;" alt="" class="profile">
+        {% endif %}
+    </div>
+    
+</nav></div>
+
+<aside class="aside" id="aside">
+    <div class="list">
+        <ul>
+            <li><button>
+                <a href="{% url '' %}"><i class="fa-solid fa-house"></i><span class="text">home</span></a>
+                </button></li>
+            <li><button>
+                  <a href="{% url 'profile' %}">  <i class="fa-solid fa-user"></i><span class="text">profile</span></a>
+                </button></li>
+            <li><button>
+                <a href="{% url 'mycourses' %}">  <i class="fa-solid fa-book-open-reader"></i><span class="text">My Courses</span></a>
+                </button></li>
+            <li><button>
+                    <i class="fa-solid fa-inbox"></i></i><span class="text">inbox</span>
+                </button></li>
+            <li><button id="add">
+            <i class="fa-solid fa-plus"></i><span class="text">Add Course</span>
+        </button></li>
+           
+        </ul>
+    </div>
+    <hr>
+    <div class="list">
+        <ul>
+            <li><button>
+                <a href="{% url 'sittings' %}"><i class="fa-solid fa-gear"></i><span class="text">sittings</span></a>
+                </button></li>
+            <li><button>
+                <a href="{% url 'support' %}"><i class="fa-solid fa-headset"></i><span class="text">Contact</span></a> 
+                </button></li>
+            <li><button >
+                   <a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i><span class="text">logOut</span></a> 
+                </button></li>
+        </ul>
+    </div>
+</aside>
