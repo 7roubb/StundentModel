@@ -14,11 +14,15 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('submit-message/', views.support_message, name='submit-message'),
     path('search/', views.search_courses, name='search_courses'),
-    path('register/<str:course_code>/', views.register_course, name='register_course'),
+    path('register/<str:course_code>/', views.register_course, name='register_course'),   
     path('my_courses', views.mycourses, name='mycourses'),
     path('sittings', views.sittings, name='sittings'),
-    path('course/<str:course_code>/', views.course_detail, name='course-detail'),  # or using the class-based view
-    
+    path('course/<str:course_code>/', views.course_detail, name='course'),  # or using the class-based view
+    path('addcourse/', views.add_course, name='addcourse'),
+    path('notifications/', views.notifications_list, name='notifications'),
+    path('notifications/read/<int:notification_id>/', views.mark_as_read, name='mark_as_read'),
+    path('notifications/add/', views.add_notification, name='add_notification'),
+
   
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

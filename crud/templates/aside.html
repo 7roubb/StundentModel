@@ -7,10 +7,10 @@
         </button>
         <div class="logo">
             
-            <a href="{% url '' %}"><img src="../static/assets/logo.png" width="100px" alt="" class="logoimg"></a>
+            <a href="{% url '' %}"><img src="{% static 'logo.png' %}" width="100px" alt="" class="logoimg"></a>
         </div>        
     </div>
-       
+       {% if not user.is_staff%}
     <div class="search_box">
         
         <form method="GET" action="{% url 'search_courses' %}">
@@ -20,6 +20,7 @@
         
                     
     </div>
+    {%endif%}
     <div class="new">
         {% if student.avatar %}
         <img  src="{{student.avatar.url}}" height="45px" width="45px" style="border-radius: 50%;" alt="" class="profile">
@@ -39,15 +40,20 @@
             <li><button>
                   <a href="{% url 'profile' %}">  <i class="fa-solid fa-user"></i><span class="text">profile</span></a>
                 </button></li>
+                {%if not user.is_staff%}
             <li><button>
                 <a href="{% url 'mycourses' %}">  <i class="fa-solid fa-book-open-reader"></i><span class="text">My Courses</span></a>
                 </button></li>
+                {%endif%}
             <li><button>
-                    <i class="fa-solid fa-inbox"></i></i><span class="text">inbox</span>
-                </button></li>
+                <a href="{% url 'notifications' %}"><i class="fa-solid fa-inbox"></i></i><span class="text">inbox</span>
+                </button></li></a>
+                {%if user.is_staff%}
             <li><button id="add">
-            <i class="fa-solid fa-plus"></i><span class="text">Add Course</span>
+                <a href="{% url 'addcourse' %}">
+            <i class="fa-solid fa-plus"></i><span class="text">Add Course</span> </a>
         </button></li>
+        {%endif%}
            
         </ul>
     </div>

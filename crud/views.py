@@ -12,8 +12,10 @@ import time
 from .models import *
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from .form import StudentForm
+from .form import *
 from django.views.generic import DetailView
+
+#add new user to the moddel
 def signup(request):
 
     if request.method == 'POST':
@@ -36,7 +38,7 @@ def signup(request):
                 user_login = auth.authenticate(username=username, password=password)
                 auth.login(request, user_login)
                 user_model = User.objects.get(username=username)
-                new_student = Student.objects.create(user=user_model, id_user=user_model.id,fullname=name)
+                new_student = Student.objects.create(user=user_model, id_user=user_model.id,fullname=name,email=email)
                 new_student.save()
                 return redirect('/')
         else:
@@ -46,7 +48,7 @@ def signup(request):
         
     else:
         return render(request, 'sign.html')
-
+#sign in to the account 
 def signin(request):
     
     if request.method == 'POST':
@@ -65,7 +67,7 @@ def signin(request):
 
     else:
         return render(request, 'sign.html')
-    
+#logout from the account  
 @login_required(login_url='login')
 def logout(request):
     auth.logout(request)
@@ -76,14 +78,18 @@ def test(request):
 
 @login_required(login_url='/login'  )
 def home(request):
-    userl = request.user
+    userl = request.user#used to return user to the home page also i used this for the user photo in the navigatior u will see that i do the same thing may time becouse i 
+    #need to return user to each page to get the user image 
     print(f'Logged-in user: {userl}')
     
     student = Student.objects.filter(user=userl).first()
     print(f'Student found: {student}')
-    
+    courseAdmin = Courses.objects.all()
     courses = []
     
+    
+    students = Student.objects.all()
+    #used to return the courses that the student register on it 
     if student:
         registrations = studentsReg.objects.filter(student_id=student)
         print(f'Registrations found: {registrations.count()}')
@@ -93,7 +99,9 @@ def home(request):
             courses.append(course)
             print(f'Registered Course: {course.name}, Code: {course.code}')
     
-    return render(request, 'index.html', {'student': student, 'courses': courses})
+    
+    
+    return render(request, 'index.html', {'student': student, 'courses': courses,'courseAdmin':courseAdmin,'users':students} )
 
 
 @login_required(login_url='login')
@@ -102,7 +110,7 @@ def logout_view(request):
     auth.logout(request)  
     return redirect('/')
 
-
+# this page is additonal page to send a support message by the student to the admin and aslo admin will see the message 
 @login_required(login_url='login')
 def support(request):
     userl = request.user
@@ -111,20 +119,27 @@ def support(request):
     student = Student.objects.filter(user=userl).first()
     print(f'Student found: {student}')
     
-    return render(request, 'support.html', {'student': student})
+    support_messages = []
+    if userl.is_staff:  # Check if the user is an admin
+        support_messages = SupportMessage.objects.all()
+    
+    return render(request, 'support.html', {'student': student, 'support_messages': support_messages})
+
 
 @login_required(login_url='login')
 def support_message(request):
- if request.method == "POST":
-        email = request.POST.get('email')
+    userl = request.user
+    print(f'Logged-in user: {userl}')
+    
+    student = Student.objects.filter(user=userl).first()
+    studentEmail = student.email
+    if request.method == "POST":
         message = request.POST.get('message')
-        if email and message:
-            SupportMessage.objects.create(email=email, message=message)
+        if message:
+            SupportMessage.objects.create(email=studentEmail, message=message)
         else:
             pass
- time.sleep(1)
- return render(request, 'support.html')
-
+    return redirect('support')
 
 
 def signupview(request):
@@ -183,6 +198,10 @@ def search_courses(request):
 
 
 @login_required
+
+
+
+
 def register_course(request, course_code):
     if request.method == "POST":
         course = get_object_or_404(Courses, code=course_code)
@@ -190,7 +209,12 @@ def register_course(request, course_code):
 
         if studentsReg.objects.filter(student_id=student, course_id=course).exists():
             messages.error(request, "You are already registered for this course.")
-            return redirect('')
+            return redirect('')  # Assuming 'home' is a valid URL name for the homepage
+        prerequisites = Prerequisties.objects.filter(course=course)
+        for prereq in prerequisites:
+            if not studentsReg.objects.filter(student_id=student, course_id=prereq.course_prerequisite).exists():
+                messages.error(request, f"You must complete {prereq.course_prerequisite.name} before registering for this course.")
+                return redirect('')  # Redirect to homepage
 
         existing_registrations = studentsReg.objects.filter(student_id=student)
         for registration in existing_registrations:
@@ -198,13 +222,14 @@ def register_course(request, course_code):
             if existing_course.schedule_id:
                 if course.schedule_id and has_time_conflict(existing_course.schedule_id, course.schedule_id):
                     messages.error(request, f"Schedule conflict with {existing_course.name}.")
-                    return redirect('')
+                    return redirect('')  # Redirect to homepage
 
+        # Register for the course
         registration = studentsReg(student_id=student, course_id=course)
         registration.save()
         messages.success(request, "You have successfully registered for the course.")
-   
-    return redirect('')
+
+    return redirect('')  # Redirect to homepage after processing the form
 
 def has_time_conflict(schedule1, schedule2):
     if schedule1.days != schedule2.days:
@@ -214,6 +239,7 @@ def has_time_conflict(schedule1, schedule2):
         return True
 
     return False
+
 
 
 
@@ -239,7 +265,10 @@ def mycourses(request):
                 'schedule_days': schedule.days if schedule else 'No schedule',
                 'start_time': schedule.start_time if schedule else 'N/A',
                 'end_time': schedule.end_time if schedule else 'N/A',
-                'room_no': schedule.room_no if schedule else 'N/A'
+                'room_no': schedule.room_no if schedule else 'N/A',
+                'instractor': course.instractor if schedule else 'N/A',
+                'description': course.description if schedule else 'N/A',
+               
             })
             print(f'Registered Course: {course.name}, Code: {course.code}, Schedule: {schedule}')
     
@@ -272,16 +301,100 @@ class CourseDetailView(DetailView):
     context_object_name = 'course'
     slug_field = 'code'
     slug_url_kwarg = 'course_code'
-@login_required(login_url='/login'  )
+@login_required(login_url='login'  )
 def course_detail(request, course_code):
     course = get_object_or_404(Courses, code=course_code)
+    user = request.user
+    student = Student.objects.filter(user=user).first()
+
+    # Get students registered in the course
+    registrations = studentsReg.objects.filter(course_id=course)
+    registered_students = [{
+        'fullname': reg.student_id.fullname,
+        'email': reg.student_id.email
+    } for reg in registrations]
+
+    context = {
+        'course': course,
+        'schedule': course.schedule_id,
+        'student': student,
+        'registered_students': registered_students,
+        'num_registered_students': len(registered_students),
+        'is_admin': user.is_staff
+    }
+
+    return render(request, 'course.html', context)
+
+
+@login_required(login_url='login')
+def add_course(request):
     userl = request.user
     print(f'Logged-in user: {userl}')
     
     student = Student.objects.filter(user=userl).first()
-    context = {
-        'course': course,
-        'schedule': course.schedule_id,
-        'student': student
-    }
-    return render(request, 'course.html', context)
+    if not request.user.is_staff:
+        messages.error(request, "You do not have permission to add courses.")
+        return redirect('')
+
+    if request.method == 'POST':
+        course_form = CourseForm(request.POST)
+        schedule_form = ScheduleForm(request.POST)
+        if course_form.is_valid() and schedule_form.is_valid():
+            schedule = schedule_form.save(commit=False)
+            conflicting_courses = Courses.objects.filter(
+                schedule_id__days=schedule.days,
+                schedule_id__start_time__lt=schedule.end_time,
+                schedule_id__end_time__gt=schedule.start_time,
+                schedule_id__room_no=schedule.room_no
+            )
+            if conflicting_courses.exists():
+                schedule_form.add_error('room_no', 'This schedule conflicts with another course. Please select a different schedule.')
+            else:
+                schedule.save()
+                course = course_form.save(commit=False)
+                course.schedule_id = schedule
+                course.save()
+                messages.success(request, "Course and schedule added successfully.")
+                return redirect('')
+    else:
+        course_form = CourseForm()
+        schedule_form = ScheduleForm()
+
+    return render(request, 'addcourse.html', {'course_form': course_form, 'schedule_form': schedule_form,'student':student})
+
+
+
+@login_required
+def notifications_list(request):
+    userl = request.user
+    print(f'Logged-in user: {userl}')
+    
+    student = Student.objects.filter(user=userl).first()
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'notifications.html', {'notifications': notifications,'student': student})
+
+@login_required
+def mark_as_read(request, notification_id):
+    userl = request.user
+    print(f'Logged-in user: {userl}')
+    
+    student = Student.objects.filter(user=userl).first()
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return redirect('notifications',{'student': student})
+
+@login_required
+def add_notification(request):
+    userl = request.user
+    print(f'Logged-in user: {userl}')
+    
+    student = Student.objects.filter(user=userl).first()
+    if request.method == 'POST':
+        title = request.POST['title']
+        message = request.POST['message']
+        users = User.objects.all()
+        for user in users:
+            Notification.objects.create(title=title, message=message, user=user)
+        return redirect('notifications')
+    return render(request, 'notification.html',{'student': student})

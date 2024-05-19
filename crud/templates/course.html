@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{course.code}}</title>
 
     {% load static %}
     
@@ -15,8 +15,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .card {
-            margin: 20px auto;
-            width: 90%; /* Adjust based on your layout requirements */
+            margin: 20px 200px 200px 200px ;
+            width: 70%; /* Adjust based on your layout requirements */
             background-color: #fff;
             border: 1px solid #ccc;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -49,22 +49,46 @@
         .card-text:last-child {
             margin-bottom: 0;
         }
-        
+        .title{
+            margin-top:200px ;
+            margin-left:200px ;
+            color: #666;
+        }
+        .h22 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid rgb(187, 183, 183);
+
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
     
     
 </head>
 <body>
 
-
+   
     {% include "aside.html" %}
 
 
 <div class="pageconent"> 
 
-    <div class="content-page">
-    <div class="container">
 
+{% if not user.is_staff %}
+  <h1 class="title"> Course :</h1>
 <div class="card">
     <div class="card-header">
         <h1 class="card-title">{{ course.name }}</h1>
@@ -73,9 +97,8 @@
         <p class="card-text"><strong>Code:</strong> {{ course.code }}</p>
         <p class="card-text"><strong>Description:</strong> {{ course.description }}</p>
         <p class="card-text"><strong>Instructor:</strong> {{ course.instractor }}</p>
-        <p class="card-text"><strong>Capacity:</strong> {{ course.capacity }}</p>
+        <p class="card-text"><strong>Capacity:</strong> {{ num_registered_students }}/{{ course.capacity }}</p>
         {% if course.schedule_id %}
-            <h2>Schedule Details</h2>
             <p class="card-text"><strong>Days:</strong> {{ course.schedule_id.days }}</p>
             <p class="card-text"><strong>Start Time:</strong> {{ course.schedule_id.start_time|date:"H:i" }}</p>
             <p class="card-text"><strong>End Time:</strong> {{ course.schedule_id.end_time|date:"H:i" }}</p>
@@ -85,42 +108,59 @@
         {% endif %}
     </div>
 </div>
+{%endif%}
+{% if user.is_staff %}
+<h1 class="title"> Course :</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">{{ course.name }}</h1>
+    </div>
+    <div class="card-body">
+        <p class="card-text"><strong>Code:</strong> {{ course.code }}</p>
+        <p class="card-text"><strong>Description:</strong> {{ course.description }}</p>
+        <p class="card-text"><strong>Instructor:</strong> {{ course.instractor }}</p>
+        <p class="card-text"><strong>Capacity:</strong> {{ num_registered_students }}/{{ course.capacity }}</p>
+        {% if course.schedule_id %}
+            <p class="card-text"><strong>Days:</strong> {{ course.schedule_id.days }}</p>
+            <p class="card-text"><strong>Start Time:</strong> {{ course.schedule_id.start_time|date:"H:i" }}</p>
+            <p class="card-text"><strong>End Time:</strong> {{ course.schedule_id.end_time|date:"H:i" }}</p>
+            <p class="card-text"><strong>Room No:</strong> {{ course.schedule_id.room_no }}</p>
+        {% else %}
+            <p class="card-text">No schedule information available.</p>
+        {% endif %}
+        {% if is_admin %}
+        <h3 class="h22">Registered Students:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Student Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in registered_students %}
+                    <tr>
+                        <td>{{ student.fullname }}</td>
+                        <td>{{ student.email }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+        
+    </div>
+</div>
+
+
+
+{% endif %}
 
    
         
-          </div>
-      </div>
+          
   </div>
-      <script>let aside = document.getElementById("aside");
-        let user = document.getElementById("user");
-        let aside_texts = document.querySelectorAll(".text");
-        
-        user.addEventListener("click", () => {
-          aside.classList.toggle("active");
-          aside.classList.value.indexOf("active") != -1
-            ? aside_texts.forEach((e, i) =>
-                setTimeout(() => e.classList.add("active"), 100 * (i + 1))
-              )
-            : aside_texts.forEach((e) => e.classList.remove("active"));
-        });
-        
-        let add = document.getElementById("add").onclick = () => {
-          console.log("xclick")
-        }
-        
-        
-        const email = document.getElementById("email")
-        const message = document.getElementById("message")
-        
-        function ValidateEmail(mail) 
-        {
-         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value))
-          {
-            return (true)
-          }
-            alert("You have entered an invalid email address!")
-            return (false)
-        }
+      <script src="{% static 'script.js' %}">
         
         </script>
 </body>

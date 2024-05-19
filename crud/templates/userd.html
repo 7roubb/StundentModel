@@ -15,7 +15,13 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-  
+    <div id="message-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
     {% include "aside.html" %}
 
 

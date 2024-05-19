@@ -10,7 +10,7 @@ class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     email = models.CharField(max_length=100)
     id_user = models.IntegerField( null=True)  
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, default= 'defult.jpg')
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, default= 'defult.png')
     bio = models.CharField(max_length=250 , null=True, blank=True, default='None')
   
 
@@ -55,3 +55,12 @@ class SupportMessage(models.Model):
     message = models.CharField(max_length=255)
     email = models.EmailField(max_length=120)
     
+class Notification(models.Model):
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title

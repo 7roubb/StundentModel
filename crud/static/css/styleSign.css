@@ -195,3 +195,34 @@ footer a {
     text-decoration: none;
     font-weight: 500;
 }
+#message-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    opacity: 0.9;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.message.error {
+    background-color: #f44336;
+}
+
+.message.success {
+    background-color: #4CAF50;
+}
+
+.message.warning {
+    background-color: #ff9800;
+}
+
+.message.info {
+    background-color: #2196F3;
+}

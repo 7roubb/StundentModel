@@ -6,11 +6,18 @@
     {% load static %}
    
     <link rel="stylesheet" type="text/css" href="{% static 'css/styleSign.css' %}">
+
     <title>Student Model</title>
   </head>
   <body>
-    
- 
+    <div id="message-container">
+      {% if messages %}
+          {% for message in messages %}
+           <div class="message {{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+      {% endif %}
+  </div>
+
   <div class="parent">
     <img src="./../static/assets/lOGO.png" alt="" width="450px">
     <div class="wraapper">

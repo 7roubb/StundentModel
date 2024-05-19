@@ -10,6 +10,22 @@
 
 
 
+.supportAdmin{  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  
+  margin: 400px;
+  width: 100%;
+
+ }
+ .support-messages {
+  margin: 100px;
+
+  width: 50%;
+  margin: 100px;
+}
 
 .container {
   margin-top: 200px;
@@ -63,7 +79,7 @@
   font-size: 100%;
 }
 
-.message {
+.messages {
   border: none;
   outline: none;
   resize: none;
@@ -217,7 +233,7 @@
 
   }
   
-  .message {
+  .messages {
  
     width: 80%;
   

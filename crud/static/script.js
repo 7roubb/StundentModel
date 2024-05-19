@@ -2,6 +2,15 @@ let aside = document.getElementById("aside");
 let user = document.getElementById("user");
 let aside_texts = document.querySelectorAll(".text");
 
+setTimeout(() => {
+  const messages = document.querySelectorAll('.message');
+  messages.forEach(message => {
+      message.style.opacity = '0';
+      setTimeout(() => message.remove(), 500); // remove after transition
+  });
+}, 3000);
+
+
 user.addEventListener("click", () => {
   aside.classList.toggle("active");
   aside.classList.value.indexOf("active") != -1
@@ -15,25 +24,3 @@ let add = document.getElementById("add").onclick = () => {
   console.log("xclick")
 }
 
-
-const email = document.getElementById("email")
-const message = document.getElementById("message")
-
-function ValidateEmail(mail) 
-{
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value))
-  {
-    return (true)
-  }
-    alert("You have entered an invalid email address!")
-    return (false)
-}
-
-
-  setTimeout(() => {
-    const messages = document.querySelectorAll('.message');
-    messages.forEach(message => {
-        message.style.opacity = '0';
-        setTimeout(() => message.remove(), 500); // remove after transition
-    });
-}, 3000);

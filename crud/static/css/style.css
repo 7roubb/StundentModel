@@ -56,6 +56,11 @@ nav{
     color: #928c8c;
     margin-left: 12px;
 }
+.header1 a:hover {
+    text-decoration: underline;
+    color:#a71b1be8;
+}
+
 
 .new{
     display: flex;

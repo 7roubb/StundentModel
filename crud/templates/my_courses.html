@@ -134,9 +134,23 @@
                     text-align: center;
                 }
             }
+            .table-wrapper {
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .table-wrapper p {
+                font-weight: 500;
+                font-size: larger;
+                color: #918c8c;
+            }
+           
         </style>
 </head>
 <body>
+
     {% include "aside.html" %}
 
 
@@ -144,16 +158,18 @@
         {% if student %}
 
 <div class="table-wrapper">
-    <thead><h2>My Courses</h2>
+    {%if courses%}
 
+    <thead><h2>My Courses</h2>
     <table class="fl-table">
         <thead>
         <tr>
-            <th>Header 1</th>
-            <th>Header 2</th>
-            <th>Header 3</th>
-            <th>Header 4</th>
-            <th>Header 5</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Days</th>
+            <th>Time</th>
+            <th>Room</th>
+            <th>Instructor</th>
         </tr>
         </thead>
         <tbody>
@@ -166,6 +182,8 @@
             <td>{{course.schedule_days}}</td>
             <td>{{course.start_time}}:{{course.end_time}}</td>
             <td>{{course.room_no}}</td>
+            <td>{{course.instractor}}</td>
+
         </tr>
         {% empty %}
         <h2>No courses registered.</h2>
@@ -173,9 +191,12 @@
       
         <tbody> 
     </table>
+    
     {% else %}
     <p>You are not registered as a student or no courses found.</p>
     {% endif %}
+    {%endif%}
+
 
 </div>
  
