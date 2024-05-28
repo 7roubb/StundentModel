@@ -127,6 +127,7 @@
         {% endif %}
         {% if is_admin %}
         <h3 class="h22">Registered Students:</h3>
+        {%if registered_students %}
         <table>
             <thead>
                 <tr>
@@ -143,6 +144,9 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <h3>No registered students.</h3>
+        {% endif %}
     {% endif %}
     <form action="{% url 'delete_course' course.code %}" method="post">
         {% csrf_token %}

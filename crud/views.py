@@ -307,7 +307,7 @@ def mark_as_read(request, notification_id):
     notification = get_object_or_404(Notification, id=notification_id, user=request.user)
     notification.is_read = True
     notification.save()
-    return redirect('notifications',{'student': student})
+    return redirect('notifications')
 
 @staff_member_required
 @login_required
@@ -323,6 +323,7 @@ def add_notification(request):
             Notification.objects.create(title=title, message=message, user=user)
         return redirect('notifications')
     return render(request, 'notification.html',{'student': student})
+@login_required
 @staff_member_required(login_url='login')
 def delete_course(request, course_code):
     course = get_object_or_404(Courses, code=course_code)
@@ -331,4 +332,20 @@ def delete_course(request, course_code):
         course.delete()
         messages.success(request, f"The course '{course_name}' has been deleted successfully.")
         return redirect('')  # Adjust this to the name of the URL where you list courses
-    return render(request, 'idex.html')
+    return render(request, 'index.html')
+
+@login_required
+def unregister_course(request, course_code):
+    course = get_object_or_404(Courses, code=course_code)
+    student = get_object_or_404(Student, user=request.user)
+
+    if request.method == 'POST':
+        registration = studentsReg.objects.filter(student_id=student, course_id=course).first()
+        if registration:
+            registration.delete()
+            messages.success(request, "You have been unregistered from the course.")
+        else:
+            messages.error(request, "You are not registered for this course.")
+        return redirect('course_details', course_code=course_code)
+    return redirect('course_details', course_code=course_code)
+

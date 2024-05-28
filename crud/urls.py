@@ -23,6 +23,8 @@ urlpatterns = [
     path('notifications/', views.notifications_list, name='notifications'),
     path('notifications/read/<int:notification_id>/', views.mark_as_read, name='mark_as_read'),
     path('notifications/add/', views.add_notification, name='add_notification'),
+    path('course/unregister/<str:course_code>/', views.unregister_course, name='unregister_course'),
+
 
   
     
