@@ -34,6 +34,8 @@ class Courses(models.Model):
     instractor = models.CharField(max_length=30,default='')
     capacity = models.IntegerField(default=0)
     schedule_id = models.ForeignKey(CoruseSchedules,on_delete=models.CASCADE,null=True,unique=True)
+    color = models.CharField(max_length=7, default='#FFFFFF') 
+
     def _str_(self):
         return self.name
 

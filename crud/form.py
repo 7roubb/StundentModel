@@ -12,10 +12,22 @@ class StudentForm(forms.ModelForm):
             self.fields['avatar'].widget.clear_checkbox_label = None
 
 class CourseForm(forms.ModelForm):
+    prerequisites = forms.ModelMultipleChoiceField(
+        queryset=Courses.objects.all(),
+        required=False,
+        widget=forms.Select,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(CourseForm, self).__init__(*args, **kwargs)
+        # Include a default option
+        self.fields['prerequisites'].choices = [(None, 'No Prerequisites')] + [
+            (course.pk, course.name) for course in Courses.objects.all()
+        ]
+
     class Meta:
         model = Courses
-        fields = ['code', 'name', 'description', 'instractor', 'capacity']
-
+        fields = ['code', 'name', 'description', 'instractor', 'capacity', 'prerequisites']
 class ScheduleForm(forms.ModelForm):
     class Meta:
         model = CoruseSchedules

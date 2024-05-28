@@ -74,7 +74,7 @@
                 <ul class="coursesReg">
                     {% for course in courses %}
                         <div class="courses">
-                            <div class="header1">
+                            <div class="header1" style="background-color: {{ course.color }};">
                                 <a href="{% url 'course' course.code %}"><h2>{{ course.name }}</h2></a>
                             </div>
                             <li>(Code: {{ course.code }})</li>
@@ -92,7 +92,7 @@
                 {% for course in courseAdmin %}
                     
                     <div class="courses">
-                        <div class="header1">
+                        <div class="header1" style="background-color: {{ course.color }};">
                             <a href="{% url 'course' course.code %}"><h2>{{ course.name }}</h2></a>
                         </div>
                         <li>(Code: {{ course.code }})</li>

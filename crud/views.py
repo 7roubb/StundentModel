@@ -4,14 +4,13 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import admin
 from .models import Student,SupportMessage,studentsReg,Courses
 from django.urls import reverse_lazy
 from .models import Courses
 from .form import CourseForm
 from django.contrib.auth import logout
-import time 
 from .models import *
+import random
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from .form import *
@@ -227,6 +226,7 @@ def course_detail(request, course_code):
     course = get_object_or_404(Courses, code=course_code)
     user = request.user
     student = Student.objects.filter(user=user).first()
+
     # Get students registered in the course
     registrations = studentsReg.objects.filter(course_id=course)
     registered_students = [{
@@ -234,13 +234,17 @@ def course_detail(request, course_code):
         'email': reg.student_id.email
     } for reg in registrations]
 
+    # Check if the current user (student) is registered for the course
+    user_is_registered = any(reg.student_id == student for reg in registrations) if student else False
+
     context = {
         'course': course,
         'schedule': course.schedule_id,
         'student': student,
         'registered_students': registered_students,
         'num_registered_students': len(registered_students),
-        'is_admin': user.is_staff
+        'is_admin': user.is_staff,
+        'user_is_registered': user_is_registered  # boolean value indicating registration status
     }
 
     return render(request, 'course.html', context)
@@ -248,13 +252,13 @@ def course_detail(request, course_code):
 @staff_member_required
 @login_required(login_url='login')
 def add_course(request):
-    userl = request.user
-    print(f'Logged-in user: {userl}')
+    user = request.user
+    print(f'Logged-in user: {user}')
     
-    student = Student.objects.filter(user=userl).first()
+    student = Student.objects.filter(user=user).first()
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to add courses.")
-        return redirect('home')  # Provide the correct URL name for redirecting if not staff
+        return redirect('home')
 
     if request.method == 'POST':
         course_form = CourseForm(request.POST)
@@ -268,15 +272,22 @@ def add_course(request):
                 schedule_id__room_no=schedule.room_no
             )
             if conflicting_courses.exists():
-                schedule_form.add_error('room_no', 'This schedule conflicts with another course. Please select a different schedule.')
+                schedule_form.add_error('room_no', 'This schedule conflicts with another course.')
                 messages.error(request, "Failed to add the course due to schedule conflicts.")
             else:
                 schedule.save()
                 course = course_form.save(commit=False)
                 course.schedule_id = schedule
+                # Generate a random bright color
+                bright_color = "#{:06X}".format(random.randint(0x888888, 0xFFFFFF))
+                course.color = bright_color
                 course.save()
+                # Save prerequisites
+                prerequisites = course_form.cleaned_data['prerequisites']
+                for prerequisite in prerequisites:
+                    Prerequisties.objects.create(course=course, course_prerequisite=prerequisite)
                 messages.success(request, "Course and schedule added successfully.")
-                return redirect('')  # Provide the correct URL name for successful creation
+                return redirect('')  # Correct URL after adding course
         else:
             messages.error(request, "Invalid form entries. Please correct the data.")
     else:
@@ -289,7 +300,6 @@ def add_course(request):
         'student': student
     }
     return render(request, 'addcourse.html', context)
-
 
 @login_required
 def notifications_list(request):
@@ -346,6 +356,6 @@ def unregister_course(request, course_code):
             messages.success(request, "You have been unregistered from the course.")
         else:
             messages.error(request, "You are not registered for this course.")
-        return redirect('course_details', course_code=course_code)
-    return redirect('course_details', course_code=course_code)
+        return redirect('')
+    return redirect('' )
 
