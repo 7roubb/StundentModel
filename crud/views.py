@@ -227,7 +227,6 @@ def course_detail(request, course_code):
     course = get_object_or_404(Courses, code=course_code)
     user = request.user
     student = Student.objects.filter(user=user).first()
-
     # Get students registered in the course
     registrations = studentsReg.objects.filter(course_id=course)
     registered_students = [{
@@ -255,7 +254,7 @@ def add_course(request):
     student = Student.objects.filter(user=userl).first()
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to add courses.")
-        return redirect('')
+        return redirect('home')  # Provide the correct URL name for redirecting if not staff
 
     if request.method == 'POST':
         course_form = CourseForm(request.POST)
@@ -270,18 +269,26 @@ def add_course(request):
             )
             if conflicting_courses.exists():
                 schedule_form.add_error('room_no', 'This schedule conflicts with another course. Please select a different schedule.')
+                messages.error(request, "Failed to add the course due to schedule conflicts.")
             else:
                 schedule.save()
                 course = course_form.save(commit=False)
                 course.schedule_id = schedule
                 course.save()
                 messages.success(request, "Course and schedule added successfully.")
-                return redirect('')
+                return redirect('')  # Provide the correct URL name for successful creation
+        else:
+            messages.error(request, "Invalid form entries. Please correct the data.")
     else:
         course_form = CourseForm()
         schedule_form = ScheduleForm()
 
-    return render(request, 'addcourse.html', {'course_form': course_form, 'schedule_form': schedule_form,'student':student})
+    context = {
+        'course_form': course_form,
+        'schedule_form': schedule_form,
+        'student': student
+    }
+    return render(request, 'addcourse.html', context)
 
 
 @login_required
@@ -316,3 +323,12 @@ def add_notification(request):
             Notification.objects.create(title=title, message=message, user=user)
         return redirect('notifications')
     return render(request, 'notification.html',{'student': student})
+@staff_member_required(login_url='login')
+def delete_course(request, course_code):
+    course = get_object_or_404(Courses, code=course_code)
+    if request.method == 'POST':
+        course_name = course.name
+        course.delete()
+        messages.success(request, f"The course '{course_name}' has been deleted successfully.")
+        return redirect('')  # Adjust this to the name of the URL where you list courses
+    return render(request, 'idex.html')

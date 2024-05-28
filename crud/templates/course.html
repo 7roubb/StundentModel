@@ -82,11 +82,7 @@
 
    
     {% include "aside.html" %}
-
-
 <div class="pageconent"> 
-
-
 {% if not user.is_staff %}
   <h1 class="title"> Course :</h1>
 <div class="card">
@@ -148,17 +144,14 @@
             </tbody>
         </table>
     {% endif %}
-        
+    <form action="{% url 'delete_course' course.code %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="delete_course" onclick="return confirm('Are you sure you want to delete this course?');">Delete Course</button>
+    </form>
     </div>
 </div>
 
-
-
-{% endif %}
-
-   
-        
-          
+{% endif %}       
   </div>
       <script src="{% static 'script.js' %}">
         
