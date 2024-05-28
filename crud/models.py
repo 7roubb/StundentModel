@@ -13,8 +13,6 @@ class Student(models.Model):
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, default= 'defult.png')
     bio = models.CharField(max_length=250 , null=True, blank=True, default='None')
   
-
-
 class CoruseSchedules(models.Model):
     id = models.AutoField(primary_key=True)  # Changed to AutoField for automatic ID handling
     DAY_CHOICES= (('Monday - Wensday','Monday - Wensday' ),('Sunday-Tuesday-Thursday','Sunday-Tuesday-Thursday'))
@@ -22,13 +20,11 @@ class CoruseSchedules(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     room_no = models.CharField(max_length=5)
-
     class Meta:
         unique_together = ('days', 'start_time', 'end_time', 'room_no')
 
     def __str__(self):
         return f"{self.days} {self.start_time}-{self.end_time} in {self.room_no}"
-
 
 class Courses(models.Model):
     code = models.CharField(primary_key=True, max_length=10)
@@ -49,7 +45,6 @@ class studentsReg(models.Model):
     id = models.IntegerField(primary_key=True)
     student_id= models.ForeignKey(Student, on_delete=models.CASCADE)
     course_id = models.ForeignKey(Courses, on_delete=models.CASCADE)
-    
     
 class SupportMessage(models.Model):
     message = models.CharField(max_length=255)

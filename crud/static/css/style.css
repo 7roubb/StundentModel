@@ -16,6 +16,7 @@ nav {
     padding: 10px;
     background-color: white;
     box-shadow: 0 2px 2px -2px rgb(218, 213, 213);
+    z-index: 99;
 }
 .navbar {
     display: flex;
@@ -25,9 +26,11 @@ nav {
     background-color: white;
 
 }
+.navcontainer{
+    background-color: white;
+}
 nav{
     background-color: white;
-
     position: fixed;
     width: 100%;
     top: 0px;

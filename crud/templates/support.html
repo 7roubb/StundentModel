@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support</title>
-
     {% load static %}
-    
     <link rel="stylesheet" type="text/css" href="{% static 'css/support.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
@@ -49,10 +47,6 @@
                 text-align: left;
             }
             
-          
-            
-            
-            
             .toggle-button {
                 cursor: pointer;
                 color: blue;
@@ -62,21 +56,13 @@
         </style>
 </head>
 <body>
-
-
     {% include "aside.html" %}
 {% if student and not user.is_staff %}
-
-
 <div class="pageconent"> 
-
     <div class="content-page">
-
     <div class="container">
-
         <div class="picture-container">
-        <div class="picture">
-          
+        <div class="picture"> 
       <svg  viewBox="-150 -99 1230 1022" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <!-- Generator: Sketch 40 (33762) - http://www.bohemiancoding.com/sketch -->
           <desc>Created with Sketch.</desc>
@@ -163,20 +149,12 @@
           <textarea  cols="30" rows="5" class="messages" name="message" id="message" placeholder="Message..." required></textarea>
           <button class="submit show-modal" type="submit">Submit</button>
         </form>
-        
-        
           </div>
       </div>
-
-
   </div> 
-
-  
- 
 </div>
 {%endif%}
 {% if user.is_staff %}
-
 <div class="supportAdmin">
     <div class="support-messages">
         <h2>Support Messages:</h2>
@@ -208,7 +186,6 @@
     </table>
     <div></div>
 </div>
-
 {%endif%}
 
       <script src="./../static/script.js"></script>

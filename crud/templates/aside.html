@@ -1,5 +1,12 @@
 
 {% load static %}
+<div id="message-container">
+    {% if messages %}
+        {% for message in messages %}
+         <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+</div>
 <div class="navcontainer">   <nav>
     <div class="navbar">
         <button class="user" id="user">

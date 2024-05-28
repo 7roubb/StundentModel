@@ -17,12 +17,6 @@
             text-decoration: underline;
             color:#a71b1be8;
         }
-        .message-details {
-            display: none;
-        }
-        .message-details.show {
-            display: block;
-        }
         .toggle-button {
             cursor: pointer;
             color: blue;
@@ -71,17 +65,7 @@
     </style>
 </head>
 <body>
-    <div id="message-container">
-        {% if messages %}
-            {% for message in messages %}
-             <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    
     {% include "aside.html" %}
-  
     <div class="pagecontent">
         <div class="content">
             <h1 class="h1name">Welcome, {{ student.fullname }}!</h1>
@@ -118,7 +102,7 @@
                     <li>There is no courses added.</li>
                 {% endfor %}
             </ul>
-            {%endif%}
+
             <h2>All students : </h2>
             <ul class="coursesReg">
                 {% for user in users %}
@@ -135,6 +119,9 @@
             </div>
         {% endfor %}
             </ul>
+            
+            {%endif%}
+
             
         </div>
     </div>
