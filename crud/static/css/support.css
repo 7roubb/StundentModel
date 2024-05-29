@@ -22,9 +22,13 @@
  }
  .support-messages {
   margin: 100px;
-
-  width: 50%;
+  width: 60%;
   margin: 100px;
+  /* border: 1px solid black; */
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #ece0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .container {

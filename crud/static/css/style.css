@@ -15,7 +15,7 @@ nav {
     text-align: center;
     padding: 10px;
     background-color: white;
-    box-shadow: 0 2px 2px -2px rgb(218, 213, 213);
+    box-shadow: 0 2px 2px 0.3px rgb(27, 26, 26,0.2);
     z-index: 99;
 }
 .navbar {
@@ -334,7 +334,7 @@ button {
     text-align: center;
 
 }
-.pagecontent {
+ .pagecontent {
     top:8%;
     left: 10%;
     height: 100%;
@@ -391,15 +391,17 @@ button {
 
 .coursesReg {
      display: flex;
+     justify-content: space-between;
      flex-wrap: wrap;
-
      gap: 3rem;
-     padding-top: 2rem;
+     padding-top: 1rem;
+     padding-bottom: 1rem;
 }
 .courses {
 
 border: 1px solid #e7e5e5;
-box-shadow: #e6e5e5 1px 1px ;
+/* box-shadow: #e6e5e5 1px 1px ; */
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 padding:0px 0px 40px 0px;
 border-radius: 19px;
 width: 400px;
@@ -408,6 +410,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
+/* border: 1px solid black; */
 
 }
 .courses h2 {
@@ -433,6 +436,13 @@ color: #801313;    width: 400px;
     background-size: cover;
 margin-bottom: 20px;
 border-bottom: #e0e0e0 1px solid;
+/* border: 1px solid black; */
+}
+
+.courses li {
+    color: black;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 @media screen and (max-width: 1250px) {
