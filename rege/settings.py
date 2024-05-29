@@ -38,11 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crud',
-    
 
-
-
-   
+  
 ]
 
 MIDDLEWARE = [
@@ -53,12 +50,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'crud.middleware.SessionTimeoutMiddleware', 
+
     
     
 ]
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 
 ROOT_URLCONF = 'rege.urls'
+SESSION_COOKIE_AGE = 1200 #20 minutes
 
+SESSION_SAVE_EVERY_REQUEST = True 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

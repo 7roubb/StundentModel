@@ -99,6 +99,14 @@
             <p class="card-text"><strong>Start Time:</strong> {{ course.schedule_id.start_time|date:"H:i" }}</p>
             <p class="card-text"><strong>End Time:</strong> {{ course.schedule_id.end_time|date:"H:i" }}</p>
             <p class="card-text"><strong>Room No:</strong> {{ course.schedule_id.room_no }}</p>
+            <h2>Prerequisites</h2>
+            <ul>
+                {% for prerequisite in prerequisites %}
+                    <li>{{ prerequisite.course_prerequisite.name}}</li>
+                {% empty %}
+                    <li>No prerequisites</li>
+                {% endfor %}
+            </ul>
         {% else %}
             <p class="card-text">No schedule information available.</p>
         {% endif %}
@@ -128,6 +136,14 @@
             <p class="card-text"><strong>Start Time:</strong> {{ course.schedule_id.start_time|date:"H:i" }}</p>
             <p class="card-text"><strong>End Time:</strong> {{ course.schedule_id.end_time|date:"H:i" }}</p>
             <p class="card-text"><strong>Room No:</strong> {{ course.schedule_id.room_no }}</p>
+            <h2>Prerequisites</h2>
+            <ul>
+                {% for prerequisite in prerequisites %}
+                    <li>{{ prerequisite.course_prerequisite.name }}</li>
+                {% empty %}
+                    <li>No prerequisites</li>
+                {% endfor %}
+            </ul>
         {% else %}
             <p class="card-text">No schedule information available.</p>
         {% endif %}

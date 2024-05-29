@@ -53,7 +53,7 @@
         height: 40%;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid black;
+        border: 2px solid #e0e0e0 ;
       }
       .card h3 {
         margin: 16px 0 8px;
@@ -98,7 +98,7 @@
                 ><h2>{{ course.name }}</h2></a
               >
             </div>
-            <li>(Code: {{ course.code }})</li>
+            <li>Code: {{ course.code }}</li>
             <li>{{ course.description }}</li>
           </div>
           {% empty %}
@@ -116,7 +116,7 @@
                 ><h2>{{ course.name }}</h2></a
               >
             </div>
-            <li>(Code: {{ course.code }})</li>
+            <li>Code: {{ course.code }}</li>
             <li>{{ course.description }}</li>
           </div>
           {% empty %}

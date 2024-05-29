@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Student,SupportMessage,studentsReg,Courses
+from .models import Student,SupportMessage,studentsReg,Courses,Prerequisties
 from django.urls import reverse_lazy
 from .models import Courses
 from .form import CourseForm
@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from .form import *
 from django.views.generic import DetailView
+import time
 
 #add new user to the moddel
 def signup(request):
@@ -41,6 +42,7 @@ def signup(request):
                 user.save()
                 user_login = auth.authenticate(username=username, password=password)
                 auth.login(request, user_login)
+                request.session['last_activity'] = time.time()  # Set session activity time
                 user_model = User.objects.get(username=username)
                 new_student = Student.objects.create(user=user_model, id_user=user_model.id,fullname=name,email=email)
                 new_student.save()
@@ -58,6 +60,7 @@ def signin(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
+            request.session['last_activity'] = time.time()  # Set session activity time
             return redirect('/')
         else:
             messages.info(request, 'Credentials Invalid')
@@ -156,6 +159,10 @@ def register_course(request, course_code):
         if studentsReg.objects.filter(student_id=student, course_id=course).exists():
             messages.error(request, "You are already registered for this course.")
             return redirect('')  # Assuming 'home' is a valid URL name for the homepage
+        num_registered_students = studentsReg.objects.filter(course_id=course).count()
+        if num_registered_students >= course.capacity:
+            messages.error(request, "The course capacity is full. You cannot register for this course.")
+            return redirect('')
         prerequisites = Prerequisties.objects.filter(course=course)
         for prereq in prerequisites:
             if not studentsReg.objects.filter(student_id=student, course_id=prereq.course_prerequisite).exists():
@@ -221,7 +228,7 @@ def sittings(request):
         form = StudentForm(instance=student)
     return render(request, 'sitting.html' ,{'student': student, 'form': form})
 
-@login_required(login_url='login'  )
+@login_required(login_url='login')
 def course_detail(request, course_code):
     course = get_object_or_404(Courses, code=course_code)
     user = request.user
@@ -237,6 +244,9 @@ def course_detail(request, course_code):
     # Check if the current user (student) is registered for the course
     user_is_registered = any(reg.student_id == student for reg in registrations) if student else False
 
+    # Get prerequisites for the course
+    prerequisites = Prerequisties.objects.filter(course=course)
+
     context = {
         'course': course,
         'schedule': course.schedule_id,
@@ -244,7 +254,8 @@ def course_detail(request, course_code):
         'registered_students': registered_students,
         'num_registered_students': len(registered_students),
         'is_admin': user.is_staff,
-        'user_is_registered': user_is_registered  # boolean value indicating registration status
+        'user_is_registered': user_is_registered,  # boolean value indicating registration status
+        'prerequisites': prerequisites  # list of prerequisites
     }
 
     return render(request, 'course.html', context)
@@ -263,6 +274,7 @@ def add_course(request):
     if request.method == 'POST':
         course_form = CourseForm(request.POST)
         schedule_form = ScheduleForm(request.POST)
+        print('test1')
         if course_form.is_valid() and schedule_form.is_valid():
             schedule = schedule_form.save(commit=False)
             conflicting_courses = Courses.objects.filter(
@@ -278,18 +290,17 @@ def add_course(request):
                 schedule.save()
                 course = course_form.save(commit=False)
                 course.schedule_id = schedule
-                # Generate a random bright color
                 bright_color = "#{:06X}".format(random.randint(0x888888, 0xFFFFFF))
                 course.color = bright_color
                 course.save()
-                # Save prerequisites
                 prerequisites = course_form.cleaned_data['prerequisites']
                 for prerequisite in prerequisites:
                     Prerequisties.objects.create(course=course, course_prerequisite=prerequisite)
                 messages.success(request, "Course and schedule added successfully.")
-                return redirect('')  # Correct URL after adding course
+                return redirect('')  # Update with the correct URL name
         else:
             messages.error(request, "Invalid form entries. Please correct the data.")
+            print('test2')
     else:
         course_form = CourseForm()
         schedule_form = ScheduleForm()
@@ -339,10 +350,13 @@ def delete_course(request, course_code):
     course = get_object_or_404(Courses, code=course_code)
     if request.method == 'POST':
         course_name = course.name
-        course.delete()
-        messages.success(request, f"The course '{course_name}' has been deleted successfully.")
+        schedule_id = course.schedule_id  # Store the schedule ID to delete after course deletion
+        course.delete()  # Delete the course
+        if schedule_id:  # If the course had an associated schedule, delete it
+            schedule_id.delete()
+        messages.success(request, f"The course '{course_name}' and its schedule have been deleted successfully.")
         return redirect('')  # Adjust this to the name of the URL where you list courses
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'course': course})
 
 @login_required
 def unregister_course(request, course_code):

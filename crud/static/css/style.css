@@ -391,7 +391,7 @@ button {
 
 .coursesReg {
      display: flex;
-     justify-content: space-between;
+     justify-content: flex-start;
      flex-wrap: wrap;
      gap: 3rem;
      padding-top: 1rem;
@@ -404,7 +404,7 @@ border: 1px solid #e7e5e5;
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 padding:0px 0px 40px 0px;
 border-radius: 19px;
-width: 400px;
+width: 380px;
 display: flex;
 
 flex-direction: column;
@@ -422,7 +422,7 @@ color: #801313;    width: 400px;
     margin-bottom: 20px;
 }
 .courses .header1 {
-    width: 400px;
+    width: 380px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -440,9 +440,9 @@ border-bottom: #e0e0e0 1px solid;
 }
 
 .courses li {
-    color: black;
-    font-size: 1.1em;
-    font-weight: bold;
+    color: rgb(104, 104, 104);
+    font-size: 1em;
+   
 }
 
 @media screen and (max-width: 1250px) {
