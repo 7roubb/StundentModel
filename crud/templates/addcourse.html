@@ -123,15 +123,15 @@
       }
 
       .message.error {
-        background-color: #f2dede;
-        color: #a94442;
+        background-color: #a94442;
+        color: white;
         border: 1px solid #ebccd1;
       }
     </style>
   </head>
   <body>
     {% include "aside.html" %}
-    <div class="support-messages" sty;>
+    <div class="support-messages">
       <h1>Add a New Course and Schedule</h1>
       <form class="form11" method="post">
         {% csrf_token %}

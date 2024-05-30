@@ -32,7 +32,8 @@
         {% if student.avatar %}
         <img  src="{{student.avatar.url}}" height="45px" width="45px" style="border-radius: 50%;" alt="" class="profile">
         {% else %}
-        <img  src="{% static 'assets/defult.png'%}" height="45px" width="45px" style="border-radius: 50%;" alt="" class="profile">
+        <img  src="{% static 'assets/defult.png'%}" height="45px" width="45px" style="border-radius: 50%;  object-fit: cover;
+        " alt="" class="profile">
         {% endif %}
     </div>
     

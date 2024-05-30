@@ -49,8 +49,8 @@
         gap: 5px;
       }
       .card img {
-        width: 40%;
-        height: 40%;
+        width: 8rem;
+        height:8rem;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #e0e0e0 ;
@@ -80,6 +80,42 @@
       .content {
         padding-left: 2%;
         padding-right: 2%;
+      }
+      @media screen and (max-width: 1200px) {
+        .card img {
+          width: 4rem;
+          height:4rem;
+          border-radius: 50%;
+       
+        }
+        .card {
+          width: 40%;
+        }
+
+      }
+      @media screen and (max-width: 900px) {
+        .card img {
+          width: 4rem;
+          height:4rem;
+          border-radius: 50%;
+       
+        }
+        .card {
+          width: 40%;
+        }
+
+      }
+      @media screen and (max-width: 600px) {
+        .card img {
+          width: 4rem;
+          height:4rem;
+          border-radius: 50%;
+       
+        }
+        .card {
+          width: 70%;
+        }
+
       }
     </style>
   </head>
